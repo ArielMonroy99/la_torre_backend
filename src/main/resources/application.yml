@@ -4,7 +4,7 @@ spring:
          backend
    datasource:
       url:
-         http://localhost:5432
+         jdbc:postgresql://localhost:5432/torre
       driver-class-name:
          org.postgresql.Driver
       username:
@@ -14,6 +14,9 @@ spring:
    data:
       jdbc:
          dialect: postgresql
+   jpa:
+      hibernate:
+         ddl-auto: create
 
 
 server:

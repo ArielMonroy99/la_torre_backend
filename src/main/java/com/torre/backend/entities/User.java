@@ -2,8 +2,11 @@ package com.torre.backend.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
@@ -12,7 +15,7 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "user_torre")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class User extends Auditable{
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;

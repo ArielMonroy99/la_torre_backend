@@ -13,9 +13,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 @Configuration
@@ -25,22 +27,30 @@ public class CustomSecurityConfig extends WebSecurityConfiguration {
 
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final JwtAuthFilter authFilter;
-    private final CustomUserDetailsService customUserDetailsService;
-    public CustomSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAuthFilter authFilter, CustomUserDetailsService customUserDetailsService) {
+    private final UserDetailsService userDetailsService;
+
+    public CustomSecurityConfig(JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint, JwtAuthFilter authFilter, UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         this.jwtAuthenticationEntryPoint = jwtAuthenticationEntryPoint;
         this.authFilter = authFilter;
-        this.customUserDetailsService = customUserDetailsService;
+        this.userDetailsService = userDetailsService;
     }
-
+    @Bean
+    AuthenticationManager authenticationManager(HttpSecurity http, PasswordEncoder passwordEncoder) throws Exception {
+        return http.getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder)
+                .and().build();
+    }
    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth-> auth.requestMatchers("/auth").permitAll()
-                        .requestMatchers("/**").authenticated())
+                .authorizeHttpRequests(auth->
+                        auth.requestMatchers("/auth").permitAll()
+                                .anyRequest().authenticated() )
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sess-> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(authFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authFilter, BasicAuthenticationFilter.class);
         return http.build();
     }
     @Bean

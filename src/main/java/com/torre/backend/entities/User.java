@@ -22,7 +22,7 @@ public class User extends Auditable {
     private String username;
     private String password;
     private String name;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

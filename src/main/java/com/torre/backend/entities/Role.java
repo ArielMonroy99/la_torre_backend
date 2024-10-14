@@ -7,7 +7,7 @@ import lombok.*;
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "role")
 @Data
 public class Role {
     @Id

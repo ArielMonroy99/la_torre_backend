@@ -1,6 +1,7 @@
 package com.torre.backend.configurations;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.security.Keys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,30 +11,39 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
+import javax.xml.bind.DatatypeConverter;
 import java.util.*;
 import java.util.function.Function;
 
 @Component
 public class JwtService {
-   @Value("${jwt.secret}")
-   private String SECRET_KEY;
+
+    @Value("${jwt.secret}")
+    private String JWT_SECRET;
    @Value("${jwt.expiration}")
    private int EXPIRATION_TIME;
    public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
    public String generateToken(UserDetails userDetails){
        Map<String, Object> claims = new HashMap<>();
-       logger.info("{}", userDetails.getAuthorities());
        Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
-       for(GrantedAuthority role: roles){
-           claims.put("roles", Collections.singletonList(new SimpleGrantedAuthority(role.getAuthority())));
+       List<String> authorities = new ArrayList<>();
+       for (GrantedAuthority role : roles) {
+           authorities.add("ROLE_" + role.getAuthority());
        }
+       claims.put("roles", authorities);
        return doGenerateToken(claims, userDetails.getUsername());
    }
 
-   private String doGenerateToken(Map<String, Object> claims, String subject) {
-       return Jwts.builder().setClaims(claims).setSubject(subject).setIssuedAt(new Date(System.currentTimeMillis()))
-               .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-               .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+   private String doGenerateToken(Map<String, Object> claims, String subject){
+       byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);//this has to be base-64 encoded, it reads 'secret' if we de-encoded it
+       SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
+       return Jwts.builder().subject(subject)
+               .claims(claims)
+               .issuedAt(new Date(System.currentTimeMillis()))
+               .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+               .signWith(key)
+               .compact();
    }
    public String extractUsername(String token){
        return extractClaim(token, Claims::getSubject);
@@ -43,7 +53,10 @@ public class JwtService {
         return claimsResolver.apply(claims);
     }
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);//this has to be base-64 encoded, it reads 'secret' if we de-encoded it
+        SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
+        JwtParser parser = Jwts.parser().verifyWith(key).build();
+        return parser.parseSignedClaims(token).getPayload();
     }
     private Boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
@@ -53,19 +66,23 @@ public class JwtService {
     }
     public Boolean validateToken(String token) {
         try {
-            Jws<Claims> claims = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);//this has to be base-64 encoded, it reads 'secret' if we de-encoded it
+            SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
+            JwtParser parser = Jwts.parser().verifyWith(key).build();
+            parser.parseSignedClaims(token).getPayload();
             return true;
-        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+        } catch ( MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             throw new BadCredentialsException("INVALID_CREDENTIALS");
         }
     }
     public List<SimpleGrantedAuthority> getRoles(String token){
         Claims claims = extractAllClaims(token);
         List<SimpleGrantedAuthority> roles = new ArrayList<>();
-        List<Map<String, String>> roleClaims = claims.get("roles", List.class);
-        for(Map<String, String> roleClaim: roleClaims){
-            roles.add(new SimpleGrantedAuthority(roleClaim.get("authority")));
+        List roleClaims = claims.get("roles", List.class);
+        for(Object roleClaim: roleClaims){
+            roles.add(new SimpleGrantedAuthority((String) roleClaim)); // Solo agregar el rol
         }
         return roles;
     }
+
 }

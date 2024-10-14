@@ -11,8 +11,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
-import java.security.Timestamp;
-
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -22,14 +21,12 @@ import java.security.Timestamp;
 public abstract class Auditable implements Serializable {
 
     @CreatedDate
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp createdAt;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp updatedAt;
+    private LocalDateTime updatedAt;
 
     @CreatedBy
     @Column(nullable = false)

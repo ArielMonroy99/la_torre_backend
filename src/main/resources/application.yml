@@ -20,7 +20,6 @@ spring:
          ddl-auto: create
    main:
       allow-bean-definition-overriding: true
-      allow-circular-references: true
 
 
 server:

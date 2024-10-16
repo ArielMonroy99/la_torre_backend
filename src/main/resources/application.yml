@@ -17,7 +17,28 @@ spring:
    jpa:
       hibernate:
          ddl-auto: create
+   main:
+      allow-bean-definition-overriding: true
+   web:
+      resources:
+         add-mappings: false
+   mvc:
+      log-resolved-exception: true
+      throw-exception-if-no-handler-found: true
 
 
 server:
    port: 8080
+   error:
+      include-stacktrace: never
+   servlet:
+      context-path: /api/v1
+
+jwt:
+   expiration: 86400000
+   secret: OhdkbM+3UcgGuGkmOBUteulQ8M0C22jV1xO9dy4uHhV9evy2vYAtl6r8jVL8ymh50HgOWRFwACBqgitJ+yaw5z+4PE5frqzwoPqdHH4t+SBtL1425IBUjiFJvXg0nmDolM4+oZMFib2GFiH5DQ+gk8F0nP2UUos5kOR/pNNdCHkPhYAVPf+wBSTH4twK4s52Zqw64rYG6/aNSZ1wNXjku4PLV8HvehUVwsTa7ygATqBZR30LZG9P+gbGBol4d9L2yPCI7yPr+Zmoa5W5oULRKUFna1kdIHwyzpr6WKklv+i0y7W8zov1h3GZtHs+TvnJh+rNzq/iZQw8+QrmEw+J
+casbin:
+   store-type: jdbc
+   table-name: casbin_rule
+   initialize-schema: create
+

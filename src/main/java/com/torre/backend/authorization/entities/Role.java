@@ -1,13 +1,13 @@
-package com.torre.backend.entities;
+package com.torre.backend.authorization.entities;
 
-import com.torre.backend.enums.RolEnum;
+import com.torre.backend.authorization.enums.RolEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
-@Table(name = "rol")
+@Table(name = "role")
 @Data
 public class Role {
     @Id

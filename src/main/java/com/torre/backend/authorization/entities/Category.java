@@ -1,4 +1,4 @@
-package com.torre.backend.entities;
+package com.torre.backend.authorization.entities;
 
 import jakarta.persistence.*;
 import lombok.*;

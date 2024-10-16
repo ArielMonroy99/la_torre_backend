@@ -1,7 +1,7 @@
-package com.torre.backend.services;
+package com.torre.backend.authorization.services;
 
-import com.torre.backend.entities.User;
-import com.torre.backend.repositories.UserRepository;
+import com.torre.backend.authorization.entities.User;
+import com.torre.backend.authorization.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

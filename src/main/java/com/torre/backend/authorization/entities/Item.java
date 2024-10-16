@@ -1,9 +1,8 @@
-package com.torre.backend.entities;
+package com.torre.backend.authorization.entities;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 

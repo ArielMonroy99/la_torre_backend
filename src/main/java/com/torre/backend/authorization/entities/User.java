@@ -1,4 +1,4 @@
-package com.torre.backend.entities;
+package com.torre.backend.authorization.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,14 +12,14 @@ import static jakarta.persistence.GenerationType.IDENTITY;
 @Table(name = "user_torre")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class User extends Auditable{
+public class User extends Auditable {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
     private String username;
     private String password;
     private String name;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),

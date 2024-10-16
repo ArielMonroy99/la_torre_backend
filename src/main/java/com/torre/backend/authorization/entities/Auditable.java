@@ -1,5 +1,9 @@
-package com.torre.backend.entities;
+package com.torre.backend.authorization.entities;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
@@ -11,8 +15,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
-import java.security.Timestamp;
-
+import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
@@ -22,14 +25,16 @@ import java.security.Timestamp;
 public abstract class Auditable implements Serializable {
 
     @CreatedDate
-    @Column(nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp createdAt;
+    @Column(nullable = false, updatable = false)
+    @JsonDeserialize( using = LocalDateTimeDeserializer.class )
+    @JsonSerialize( using = LocalDateTimeSerializer.class )
+    private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(nullable = true)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Timestamp updatedAt;
+    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
+    @JsonSerialize( using = LocalDateTimeSerializer.class )
+    private LocalDateTime updatedAt;
 
     @CreatedBy
     @Column(nullable = false)

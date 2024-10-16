@@ -7,11 +7,17 @@ insert into user_roles (role_id, user_id) VALUES (1,1);
 insert into user_roles (role_id, user_id) VALUES (2,1);
 insert into user_roles (role_id, user_id) VALUES (2,2);
 
+-- INICIALIZACIÓN DE CASBIN
+insert into casbin_rule (id, ptype,v0,v1,v2) values (1,'p','ADMINISTRATOR','/api/v1/policy','GET|POST|PUT');
 
 
-insert into casbin_rule (id, ptype,v0,v1,v2) values (1,'p','ADMINISTRATOR','/api/v1/policy','GET');
-insert into casbin_rule (id, ptype,v0,v1,v2) values (3,'p','ADMINISTRATOR','/api/v1/policy','POST');
 
-SELECT setval('role_id_seq', COALESCE((SELECT MAX(id) FROM role), 1),false);
-SELECT setval('user_torre_id_seq', COALESCE((SELECT MAX(id) FROM user_torre), 1),false);
-SELECT setval('casbin_sequence', COALESCE((SELECT MAX(id) FROM casbin_rule), 1),false);
+
+
+SELECT setval('role_id_seq', (SELECT MAX(id) FROM role));
+SELECT setval('user_torre_id_seq',(SELECT MAX(id) FROM user_torre));
+SELECT setval('casbin_sequence',(SELECT MAX(id) FROM casbin_rule));
+
+
+
+

@@ -1,5 +1,7 @@
 # Anotaciones de Api Doc
-Para el documentar los endpoints se utilizara anotaciones  
+Para el documentar los endpoints se utilizarán anotaciones  
+
+
 ## Anotaciones de Swagger
 ### 1. `@Tag`
 - **Descripción**: Utilizada para agrupar y clasificar los endpoints del controlador en la documentación de la API.
@@ -44,8 +46,7 @@ Para el documentar los endpoints se utilizara anotaciones
 ## Ejemplo de uso en un endpoint
 Aquí tienes un ejemplo que muestra cómo se combinan estas anotaciones en un endpoint del ```PolicyController```:
 
-```
-  
+```java  
 @GetMapping()
 @Operation(description = "Endpoint para listar todas las políticas")
 @SecurityRequirement(name = "bearerToken")
@@ -56,9 +57,9 @@ public ResponseEntity<List<CasbinRule>> getAllPolicies() {
 ```
 
 ## Ejemplo de uso en un controlador
-Aqui hay un ejemplo que muestra como se utilizan otras anotaciones en el controlador del ```PolicyController```
+Aquí hay un ejemplo que muestra como se utilizan otras anotaciones en el controlador del ```PolicyController```
 
-```
+```java
 @RestController
 @RequestMapping("/policy")
 @Tag(name = "Productos", description = "Operaciones relacionada a las políticas de acceso")

@@ -1,3 +1,0 @@
-# Prueba
-
-Start typing here...

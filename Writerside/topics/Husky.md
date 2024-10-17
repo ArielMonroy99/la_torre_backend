@@ -37,3 +37,6 @@ código pase por validaciones automáticas antes de que sea enviado al repositor
    # `mvn clean test` will run
    ```
 > [Lista de hooks](https://git-scm.com/docs/githooks#_hooks)
+
+> Para el proyecto se tiene configurado un hook de commit-msg por lo que solo es necesario el comando del paso 2 
+{style="note"}

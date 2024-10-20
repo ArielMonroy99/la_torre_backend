@@ -9,8 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
-    @Query("Select i.id,i.name,i.stock,i.minimumStock,i.type,i.unit,i.category " +
-            " from Item i where (i.name ilike  '%:filter%') or (i.category.name ilike  '%:filter%')" +
-            " or (i.unit ilike  '%:filter%') or ( cast(i.type as string ) ilike '%:filter%')")
+    @Query("Select i from Item i where (i.name ilike  :filter) or (i.category.name ilike  :filter)" +
+            " or (i.unit ilike  :filter) or ( cast(i.type as string ) ilike :filter)")
     Page<Item> filterItems(String filter, Pageable pageable);
 }

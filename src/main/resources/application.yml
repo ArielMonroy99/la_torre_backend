@@ -17,11 +17,10 @@ spring:
    jpa:
       hibernate:
          ddl-auto: create
+      defer-datasource-initialization: true
+      show-sql: true
    main:
       allow-bean-definition-overriding: true
-   web:
-      resources:
-         add-mappings: false
 
 
 server:

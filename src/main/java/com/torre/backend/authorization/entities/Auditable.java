@@ -1,5 +1,6 @@
 package com.torre.backend.authorization.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -25,15 +26,17 @@ import java.time.LocalDateTime;
 public abstract class Auditable implements Serializable {
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "created_at")
     @JsonDeserialize( using = LocalDateTimeDeserializer.class )
     @JsonSerialize( using = LocalDateTimeSerializer.class )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = true)
+    @Column(name = "updated_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize( using = LocalDateTimeSerializer.class )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     @CreatedBy

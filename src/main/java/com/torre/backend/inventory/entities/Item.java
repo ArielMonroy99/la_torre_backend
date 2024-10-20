@@ -33,6 +33,7 @@ public class Item extends Auditable {
     private String unit;
     @NotNull()
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     private ItemType type;
     @NotNull()
     @ManyToOne(targetEntity = Category.class, fetch = FetchType.EAGER)

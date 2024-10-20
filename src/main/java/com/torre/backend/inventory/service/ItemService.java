@@ -10,6 +10,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import static org.yaml.snakeyaml.nodes.Tag.STR;
+
 @Service
 @Slf4j
 public class ItemService {
@@ -25,7 +27,10 @@ public class ItemService {
         String filter = queryParamsDto.getFilter();
         String order = queryParamsDto.getOrder();
         String sort = queryParamsDto.getSort();
+        filter = "%" + filter + "%";
         Pageable pageable = PageRequest.of(page,limit, Sort.Direction.valueOf(sort),order);
-        return itemRepository.filterItems(filter,pageable);
+        Page<Item> pageItem = itemRepository.filterItems(filter, pageable);
+        log.info("page {}", pageItem.getContent());
+        return pageItem;
     }
 }

@@ -31,6 +31,8 @@ public class CasbinFilterAspect {
     public void logAfter(JoinPoint joinPoint) {
         String uri = request.getRequestURI();
         String method = request.getMethod();
+        //TODO: create common messages class
+        if (request.getAttribute("roles") == null) throw new BaseException(HttpStatus.UNAUTHORIZED, "Unauthorized");
         List<Role> roles = (List<Role>) request.getAttribute("roles");
         log.info("method: {}, uri: {}, username: {}", method, uri, roles);
         boolean hasPermission = roles.stream().anyMatch(role ->
@@ -39,6 +41,5 @@ public class CasbinFilterAspect {
         if (!hasPermission) {
             throw new BaseException(HttpStatus.FORBIDDEN, "Forbidden");
         }
-
     }
 }

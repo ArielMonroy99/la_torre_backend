@@ -28,6 +28,6 @@ public class Category extends Auditable{
     @NotNull()
     @NotBlank()
     @Size(min = 3, max = 100)
-    @Column(nullable = true,length = 100,name = "description")
+    @Column(length = 100,name = "description")
     private String description;
 }

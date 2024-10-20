@@ -33,6 +33,8 @@ public class CustomSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth->
                     auth.requestMatchers("/api/v1/policy").authenticated()
+                        .requestMatchers("/api/v1/items").authenticated()
+                        .requestMatchers("/api/v1/items/**").authenticated()
                         .anyRequest().permitAll())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sess-> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

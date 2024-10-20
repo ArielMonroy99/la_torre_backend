@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QueryParamsDto {
     private String filter = "";
-    private String sort = "DESC";
+    private String sort = "ASC";
     private String order = "id";
     private Integer page = 0;
     private Integer limit = 10;

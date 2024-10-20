@@ -43,6 +43,7 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage("El endpoint solicitado no existe.");
         errorResponse.setStatus(HttpStatus.NOT_FOUND.value());
         errorResponse.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        log.error(ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
     @ExceptionHandler({MissingServletRequestParameterException.class})
@@ -51,10 +52,12 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage("Validation errors.");
         errorResponse.setStatus(HttpStatus.BAD_REQUEST.value());
         errorResponse.setTimestamp(new Timestamp(System.currentTimeMillis()));
+        log.error(ex.getMessage());
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler({Exception.class})
     public @ResponseBody ResponseEntity<ErrorResponse> handleException(Exception e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(500)
                 .body(new ErrorResponse(
                         new Timestamp(System.currentTimeMillis()),

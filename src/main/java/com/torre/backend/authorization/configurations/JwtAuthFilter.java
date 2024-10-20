@@ -46,8 +46,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(jwtToken) && jwtService.validateToken(jwtToken)) {
                 String username = jwtService.extractUsername(jwtToken);
                 List<Role> roles = userService.findByUsername(username).getRoles();
-
                 request.setAttribute("roles", roles);
+                request.setAttribute("username", username);
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(username, null, roles.stream().map(r -> new SimpleGrantedAuthority(r.getRole().name())).toList());
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
@@ -81,7 +81,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        List<String> permittedUrls = List.of("/api/v1/policy");
+        List<String> permittedUrls = List.of("/api/v1/policy", "/api/v1/items" ,"/api/v1/items/**");
         return permittedUrls.stream().noneMatch(url -> antPathMatcher.match(url, request.getRequestURI()));
     }
 

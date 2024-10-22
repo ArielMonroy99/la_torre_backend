@@ -54,7 +54,7 @@ Flyway gestiona estos cambios con archivos SQL o scripts Java que son aplicados 
     </dependencies>
 </plugin>
    ``` 
-Este puglin nos permitirá realizar las migraciones desde la linea de comandos de maven
+Este puglin nos permitirá realizar las migraciones desde la línea de comandos de maven
 
 #### 2. Flyway.conf  
    Para especificar que los datos necesarios al plugin debemos añadir el archivo `flyway.conf` en la 
@@ -67,15 +67,14 @@ Este puglin nos permitirá realizar las migraciones desde la linea de comandos d
     flyway.url=jdbc:postgresql://localhost:5432/torre
     flyway.locations=filesystem:src/main/resources/db/migration,classpath:com/torre/backend/db/seeds
   ```
-Donde se especifica el usuario, contraseña, esquemas y la url de nuestra base de datos ademas de definir donde 
+Donde se especifica el usuario, contraseña, esquemas y la url de nuestra base de datos además de definir donde 
 se encontraran nuestras migraciones
 
 #### 3. Crear nuevas migraciones 
 
 Para crear nuevas migraciones usaremos las herramientas que proporciona IntelliJIdea 
 
-1. Por lo que nos dirigiremos a apartado de base de datos y crearemos una nueva conexión
-   ![Conexión con la base de datos](nuevaConexion.png 'Conexión con la base de datos')
+1. Por lo que nos dirigiremos a apartado de base de datos y crearemos una nueva conexión   ![ con la base de datos](nuevaConexion.png 'Conexión con la base de datos')
 2. Ingresaremos los datos de nuestra DB 
    ![Datos de la conexión](datosBd.png)
 3. Damos clic en nuestra conexión y seleccionamos `Crear migración de Flyway` 
@@ -88,12 +87,74 @@ Para crear nuevas migraciones usaremos las herramientas que proporciona IntelliJ
 
 ### Java Base Migration
 
-Flyway permite ejecutar migraciones desde código Java para esto iremos al apartado de project , haremos clic derecho 
-y seleccionaremos `Java Flyway migration` esto mostrará una nueva ventana donde 
-ingresaremos el nombre de la migración. Esto generará una nuevo archivo `.java` 
-donde podremos definir la lógica de nuestra migración
+Flyway permite ejecutar migraciones desde código Java para esto iremos al apartado de project,  
+
+1. Haremos clic derecho y seleccionaremos `Flyway Java Migration`
+   ![Nueva migración de Java](java1.png 'Nueva migración de java')
+   Esto mostrará una nueva ventana donde
+2. Ingresaremos el nombre de la migración. ![Definir nombre](java2.png 'Definir nombre')
+3. Esto generará un nuevo archivo `.java` donde podremos definir la lógica de nuestra migración
+   ![Código generado](java3.png  'Código generado')
 
 > Las migraciones de **Flyway** tienen una notación estricta 
-> Todas deben empezar con `V` seguido con el número de migración, doble `_` y el nombre de la migración  
+> Todas deben empezar con `V` seguido con el número de migración, doble `_` y el nombre de la migración 
 > Ej. `V1__init_schema.sql` o `V2__users.java`
-{style = note}
+{style = note}  
+
+
+> Las migraciones Java deben encontrarse dentro de la ruta `/db/seeds`
+> del proyecto
+{style = warning}
+
+## Comando de Flyway plugin
+
+Por defecto el plugin de flyway define sus propios comandos de maven
+
+1. `mvn flyway:migrate`  
+   - **Descripción**: Aplica todas las migraciones pendientes a la base de datos.
+   - **Ejemplo**:
+      ```Bash
+         mvn flyway:migrate
+      ```
+2. `mvn flyway:clean`
+   - **Descripción**: Elimina todas las tablas y datos de la base de datos.
+   - **Ejemplo**:
+      ```Bash
+         mvn flyway:clean
+      ```
+3. `mvn flyway:info`
+   - **Descripción**: Muestra el estado actual de las migraciones.
+   - **Ejemplo**:
+      ```Bash
+         mvn flyway:info
+      ``` 
+4. `mvn flyway:validate`
+   - **Descripción**: Válida las migraciones aplicadas en comparación con las migraciones en el sistema de archivos.
+   - **Ejemplo**:
+      ```Bash
+         mvn flyway:validate
+      ```
+5. `mvn flyway:baseline`
+   - **Descripción**: Establece una versión de base (baseline) para una base de datos existente.
+     - **Ejemplo**:
+        ```Bash
+           mvn flyway:baseline
+        ```
+6. `mvn flyway:repair`
+   - **Descripción**: Repara la tabla de historial de Flyway en caso de migraciones corruptas.
+   - **Ejemplo**:
+      ```Bash
+         mvn flyway:repair
+      ``` 
+7.  `mvn flyway:undo`
+   - **Descripción**: Revierte la última migración aplicada (si se han definido scripts de "undo").
+     - **Ejemplo**:
+        ```Bash
+           mvn flyway:undo
+        ``` 
+
+> Para ejecutar las migraciones de `Java` es necesario compilar el proyecto con `mvn compile`
+
+> Para facilitar la ejecución de las migraciones tenemos el archivo `database.sh`
+> esto elimina la base de datos actual, compila el proyecto y ejecuta las migraciones
+{style = note }

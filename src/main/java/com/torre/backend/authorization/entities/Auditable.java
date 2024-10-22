@@ -1,12 +1,13 @@
 package com.torre.backend.authorization.entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
+import com.torre.backend.authorization.enums.StatusEnum;
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
@@ -19,21 +20,22 @@ import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
-@Getter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable implements Serializable {
 
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "created_at")
     @JsonDeserialize( using = LocalDateTimeDeserializer.class )
     @JsonSerialize( using = LocalDateTimeSerializer.class )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
     @LastModifiedDate
-    @Column(nullable = true)
+    @Column(name = "updated_at")
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     @JsonSerialize( using = LocalDateTimeSerializer.class )
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
 
     @CreatedBy
@@ -43,4 +45,8 @@ public abstract class Auditable implements Serializable {
     @LastModifiedBy
     @Column(nullable = true)
     private String updatedBy;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status = StatusEnum.ACTIVE;
 }

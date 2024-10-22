@@ -16,12 +16,13 @@ spring:
          dialect: postgresql
    jpa:
       hibernate:
-         ddl-auto: create
-      defer-datasource-initialization: true
+         ddl-auto: validate
       show-sql: true
    main:
       allow-bean-definition-overriding: true
-
+   flyway:
+      locations: classpath:db/migration
+      enabled: false
 
 server:
    port: 8080

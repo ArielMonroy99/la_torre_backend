@@ -3,13 +3,17 @@ package com.torre.backend.authorization.entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "casbin_rule")
+@AllArgsConstructor
+@NoArgsConstructor
 public class CasbinRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,6 +48,13 @@ public class CasbinRule {
     @Size(max = 100)
     @Column(name = "v5", length = 100)
     private String v5;
+
+    public CasbinRule(String ptype, String subject, String object, String actions) {
+        this.ptype = ptype;
+        this.v0 = subject;
+        this.v1 = object;
+        this.v2 = actions;
+    }
 
     @Override
     public String toString() {

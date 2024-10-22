@@ -7,8 +7,7 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.torre.backend.authorization.enums.StatusEnum;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -18,9 +17,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @MappedSuperclass
-@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public abstract class Auditable implements Serializable {
 
@@ -39,11 +40,11 @@ public abstract class Auditable implements Serializable {
     private LocalDateTime updatedAt;
 
     @CreatedBy
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String createdBy;
 
     @LastModifiedBy
-    @Column(nullable = true)
+    @Column(length = 100)
     private String updatedBy;
 
     @Column(name = "status", nullable = false)

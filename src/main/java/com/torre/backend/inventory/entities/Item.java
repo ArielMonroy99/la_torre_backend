@@ -6,11 +6,18 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.proxy.HibernateProxy;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+import java.util.Objects;
+
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @Entity
 @Table(name = "item")
 public class Item extends Auditable {
@@ -38,4 +45,6 @@ public class Item extends Auditable {
     @NotNull()
     @ManyToOne(targetEntity = Category.class, fetch = FetchType.EAGER)
     private Category category;
+
+
 }

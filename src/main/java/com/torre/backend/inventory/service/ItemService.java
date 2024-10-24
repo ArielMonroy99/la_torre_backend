@@ -12,15 +12,10 @@ import com.torre.backend.inventory.repository.CategoryRepository;
 import com.torre.backend.inventory.repository.ItemRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 
 import static com.torre.backend.common.utils.PageableMapper.buildPage;
-import static org.yaml.snakeyaml.nodes.Tag.STR;
 
 @Service
 @Slf4j
@@ -45,7 +40,7 @@ public class ItemService {
         if(itemDto == null) throw new BaseException(HttpStatus.BAD_REQUEST, "Errores de validación");
         Category category = categoryRepository.findById(itemDto.getCategoryId()).orElse(null);
         if(category == null) throw new BaseException(HttpStatus.NOT_FOUND, "Categoría no encontrada");
-        Item item = ItemMapper.toEntity(itemDto, category);
+        Item item = ItemMapper.createEntity(itemDto, category);
         item.setCreatedBy(username);
         itemRepository.save(item);
     }
@@ -66,5 +61,9 @@ public class ItemService {
         if(item == null) throw new BaseException(HttpStatus.NOT_FOUND, "Item no encontrada");
         item.setStatus(StatusEnum.valueOf(newStatus));
         itemRepository.save(item);
+    }
+
+    public Item findById(Long id) {
+        return itemRepository.findById(id).orElse(null);
     }
 }

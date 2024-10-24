@@ -17,7 +17,19 @@ public class ItemMapper {
         itemDto.setCategory(CategoryMapper.toDto(item.getCategory()));
         return itemDto;
     }
-    public static Item toEntity(CreateItemDto itemDto, Category category) {
+
+    public static Item toEntity(ItemDto itemDto) {
+        Item item = new Item();
+        item.setId(itemDto.getId());
+        item.setName(itemDto.getName());
+        item.setStock(itemDto.getStock());
+        item.setMinimumStock(itemDto.getMinimumStock());
+        item.setUnit(itemDto.getUnit());
+        item.setType(itemDto.getType());
+        item.setCategory(CategoryMapper.toEntity(itemDto.getCategory()));
+        return item;
+    }
+    public static Item createEntity(CreateItemDto itemDto, Category category) {
         Item item = new Item();
         return getItem(item, itemDto, category);
     }

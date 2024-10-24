@@ -59,7 +59,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             response.setStatus(HttpStatus.UNAUTHORIZED.value());
             ErrorResponse error = new ErrorResponse();
             error.setMessage(ex.getMessage());
-            error.setStatus(HttpStatus.UNAUTHORIZED.value());
+            error.setStatus(Integer.valueOf(HttpStatus.UNAUTHORIZED.value()));
             error.setTimestamp(new Timestamp(System.currentTimeMillis()));
             response.setHeader("Content-Type", "application/json");
             response.getOutputStream().write(new ObjectMapper().writeValueAsString(error).getBytes());
@@ -81,7 +81,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
         AntPathMatcher antPathMatcher = new AntPathMatcher();
-        List<String> permittedUrls = List.of("/api/v1/policy", "/api/v1/items" ,"/api/v1/items/**");
+        List<String> permittedUrls = Constants.PROTECTED_ROUTES;
         return permittedUrls.stream().noneMatch(url -> antPathMatcher.match(url, request.getRequestURI()));
     }
 

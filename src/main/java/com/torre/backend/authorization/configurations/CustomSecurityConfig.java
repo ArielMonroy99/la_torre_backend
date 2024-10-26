@@ -31,11 +31,12 @@ public class CustomSecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(auth->
-                    auth.requestMatchers("/api/v1/policy").authenticated()
-                        .requestMatchers("/api/v1/items").authenticated()
-                        .requestMatchers("/api/v1/items/**").authenticated()
-                        .anyRequest().permitAll())
+                .authorizeHttpRequests(auth->{
+                    for(String route: Constants.PROTECTED_ROUTES){
+                        auth.requestMatchers(route).authenticated();
+                    }
+                    auth.anyRequest().permitAll();
+                })
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .sessionManagement(sess-> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(authFilter, BasicAuthenticationFilter.class);

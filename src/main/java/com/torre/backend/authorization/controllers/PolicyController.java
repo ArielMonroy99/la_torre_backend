@@ -15,9 +15,9 @@ import org.springframework.web.servlet.tags.Param;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/policy")
-@Slf4j
 @Tag(name = "Políticas")
 @SecurityScheme(
         name = "bearerToken",
@@ -27,7 +27,6 @@ import java.util.List;
 )
 public class PolicyController {
     private final PolicyService policyService;
-
     public PolicyController(PolicyService policyService) {
         this.policyService = policyService;
     }
@@ -35,6 +34,7 @@ public class PolicyController {
     @CasbinFilter
     @GetMapping()
     @Operation(description = "Endpoint para listar todas las politicas")
+    @SecurityRequirement(name = "bearerToken")
     public ResponseEntity<List<CasbinRule>> getAllPolicies (){
         return ResponseEntity.ok(policyService.getPolicies());
     }

@@ -6,10 +6,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.proxy.HibernateProxy;
 
 import java.util.Objects;
@@ -20,6 +17,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "item")
+@AllArgsConstructor
 public class Item extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,6 +43,5 @@ public class Item extends Auditable {
     @NotNull()
     @ManyToOne(targetEntity = Category.class, fetch = FetchType.EAGER)
     private Category category;
-
 
 }

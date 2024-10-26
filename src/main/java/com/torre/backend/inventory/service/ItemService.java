@@ -5,6 +5,7 @@ import com.torre.backend.common.dtos.QueryParamsDto;
 import com.torre.backend.common.exceptions.BaseException;
 import com.torre.backend.inventory.dto.CreateItemDto;
 import com.torre.backend.inventory.dto.ItemDto;
+import com.torre.backend.inventory.dto.UpdateStockRequestDto;
 import com.torre.backend.inventory.entities.Category;
 import com.torre.backend.inventory.entities.Item;
 import com.torre.backend.inventory.mappers.ItemMapper;
@@ -65,5 +66,21 @@ public class ItemService {
 
     public Item findById(Long id) {
         return itemRepository.findById(id).orElse(null);
+    }
+
+    public void addStock(Long id, UpdateStockRequestDto update, String username) {
+        Item item = itemRepository.findById(id).orElse(null);
+        if(item == null) throw new BaseException(HttpStatus.NOT_FOUND, "Item no encontrada");
+        item.setUpdatedBy(username);
+        item.setStock(item.getStock() + update.getStock());
+        itemRepository.save(item);
+    }
+
+    public void removeStock(Long id, UpdateStockRequestDto update, String username) {
+        Item item = itemRepository.findById(id).orElse(null);
+        if(item == null) throw new BaseException(HttpStatus.NOT_FOUND, "Item no encontrada");
+        item.setUpdatedBy(username);
+        item.setStock(item.getStock() - update.getStock());
+        itemRepository.save(item);
     }
 }

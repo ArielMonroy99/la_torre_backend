@@ -86,7 +86,12 @@ CREATE TABLE user_torre
     username   VARCHAR(100)                            NOT NULL,
     password   VARCHAR(255)                            NOT NULL,
     name       VARCHAR(200)                            NOT NULL,
-    CONSTRAINT pk_user_torre PRIMARY KEY (id)
+    lastname   VARCHAR(200)                            NOT NULL,
+    cellphone  INTEGER                                 NOT NULL,
+    email      VARCHAR(200)                            NOT NULL,
+    role_id    BIGINT                                  NOT NULL,
+    CONSTRAINT pk_user_torre PRIMARY KEY (id),
+    CONSTRAINT FK_USER_TORRE_ON_ROLE FOREIGN KEY (role_id) REFERENCES role (id)
 );
 
 ALTER TABLE user_torre

@@ -12,7 +12,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 
 
-public class V4__roles extends BaseJavaMigration {
+public class V3__roles extends BaseJavaMigration {
 
     @Override
     public void migrate(Context context) {

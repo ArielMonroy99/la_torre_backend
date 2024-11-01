@@ -24,6 +24,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -45,7 +46,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String jwtToken = extractJwtFromRequest(request);
             if (StringUtils.hasText(jwtToken) && jwtService.validateToken(jwtToken)) {
                 String username = jwtService.extractUsername(jwtToken);
-                List<Role> roles = userService.findByUsername(username).getRoles();//TODO ver esto
+                List<Role> roles = Collections.singletonList(userService.findByUsername(username).getRole());
+                //List<Role> roles = userService.findByUsername(username).getRoles();//TODO ver esto
                 request.setAttribute("roles", roles);
                 request.setAttribute("username", username);
                 UsernamePasswordAuthenticationToken authenticationToken =

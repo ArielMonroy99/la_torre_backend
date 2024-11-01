@@ -30,8 +30,5 @@ public class CreateUserDto extends Auditable {
     private String username;
     @NotNull
     @NotEmpty
-    private String password;
-    @NotNull
-    @NotEmpty
     private Long roleId;
 }

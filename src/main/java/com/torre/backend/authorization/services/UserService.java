@@ -18,7 +18,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.security.SecureRandom;
 import java.util.Objects;
 
 
@@ -27,6 +30,9 @@ public class UserService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+    private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()";
+    private static final SecureRandom random = new SecureRandom();
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
@@ -48,9 +54,17 @@ public class UserService {
         if(role == null) throw new BaseException(HttpStatus.NOT_FOUND, "Rol no encontrado");
         User user = UserMapper.createEntity(userDto, role);
         user.setCreatedBy(username);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        int length =12;
+        StringBuilder password = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            password.append(CHARACTERS.charAt(index));
+        }
 
-        userRepository.save(user);
+        log.info("Contraseña generada para el usuario {}: {}", userDto.getUsername(), password.toString());
+        user.setPassword(bCryptPasswordEncoder.encode(password.toString()));
+        this.userRepository.save(user);
+
     }
 
     public Page<UserDto> findAll(QueryParamsDto queryParamsDto) {

@@ -25,8 +25,8 @@ public class V4__users extends BaseJavaMigration {
         ));
         StringJoiner valuesJoiner = new StringJoiner(",", "INSERT INTO user_torre (name, lastname, cellphone, email, username, password, role_id, created_at, created_by, status) VALUES ", ";");
         for (CreateUserDto user : users) {
-            valuesJoiner.add(String.format("('%s','%s','%s','%s','%s', 'password', '%s', 'now()', 'migration', '%s')",
-                    user.getName(), user.getLastname(), user.getCellphone(), user.getEmail(), user.getUsername(),user.getRoleId(),user.getStatus()));
+            valuesJoiner.add(String.format("('%s','%s','%s','%s','%s', '%s', '%s','now()', 'migration', '%s')",
+                    user.getName(), user.getLastname(), user.getCellphone(), user.getEmail(), user.getUsername(),bCryptPasswordEncoder.encode("password"),user.getRoleId(),user.getStatus()));
         }
         String sql = valuesJoiner.toString();
 

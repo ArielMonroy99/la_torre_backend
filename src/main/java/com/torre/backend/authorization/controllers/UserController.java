@@ -4,6 +4,7 @@ import com.torre.backend.authorization.annotations.CasbinFilter;
 import com.torre.backend.authorization.dto.CreateUserDto;
 import com.torre.backend.authorization.dto.UpdatePasswordDto;
 import com.torre.backend.authorization.enums.StatusEnum;
+import com.torre.backend.authorization.mappers.UserMapper;
 import com.torre.backend.authorization.services.UserService;
 import com.torre.backend.common.dtos.QueryParamsDto;
 import com.torre.backend.common.dtos.ResponseDto;
@@ -54,6 +55,15 @@ public class UserController {
         String username = request.getAttribute("username").toString();
         if (username == null) throw new BaseException(HttpStatus.UNAUTHORIZED,"Not logged in");
         return ResponseEntity.ok(new ResponseDto<>(true,"Operation successfull",userService.findAll(queryParamsDto)));
+    }
+
+    @GetMapping("/profile")
+    @Operation(summary = "Gets the user")
+    @CasbinFilter
+    public ResponseEntity<?> getUser(@ModelAttribute QueryParamsDto queryParamsDto, HttpServletRequest request) {
+        String username = request.getAttribute("username").toString();
+        if (username == null) throw new BaseException(HttpStatus.UNAUTHORIZED,"Not logged in");
+        return ResponseEntity.ok(new ResponseDto<>(true,"Operation successfull", UserMapper.toDto(userService.findByUsername(username))));
     }
 
     @PutMapping("/{id}")

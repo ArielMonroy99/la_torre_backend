@@ -15,9 +15,10 @@ public class UserMapper {
         user.setCellphone(userDto.getCellphone());
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setRole(userDto.getRole());
+        user.setRole(RoleMapper.toEntity(userDto.getRole()));
         return user;
     }
+
     public static UserDto toDto(User user){
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
@@ -26,7 +27,7 @@ public class UserMapper {
         userDto.setLastname(user.getLastname());
         userDto.setEmail(user.getEmail());
         userDto.setCellphone(user.getCellphone());
-        userDto.setRole(user.getRole());
+        userDto.setRole(RoleMapper.toDto(user.getRole()));
         return userDto;
     }
 

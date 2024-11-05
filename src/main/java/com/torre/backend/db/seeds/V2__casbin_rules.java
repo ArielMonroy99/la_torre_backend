@@ -20,6 +20,7 @@ public class V2__casbin_rules extends BaseJavaMigration {
         casbinRules.addAll(Arrays.asList(
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/policy", "GET|POST|PUT"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/user", "GET|POST|PUT"),
+                new CasbinRule("p", "ADMINISTRATOR", "/api/v1/user/profile", "GET"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/user/:id", "PUT"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/user/:id/password", "PUT"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/user/:id/activate", "PUT"),

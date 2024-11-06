@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 
 
-public class V6__categories extends BaseJavaMigration {
+public class V5__categories extends BaseJavaMigration {
 
     @Override
     public void migrate(Context context) {

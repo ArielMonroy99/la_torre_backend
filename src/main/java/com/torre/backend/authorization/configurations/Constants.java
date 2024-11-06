@@ -9,6 +9,7 @@ public class Constants {
             "/api/v1/items/**",
             "/api/v1/category",
             "/api/v1/category/**",
-            "/api/v1/user/**"
+            "/api/v1/user/**",
+            "/api/v1/products/**"
     );
 }

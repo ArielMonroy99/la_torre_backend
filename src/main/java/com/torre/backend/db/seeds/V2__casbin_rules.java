@@ -31,7 +31,6 @@ public class V2__casbin_rules extends BaseJavaMigration {
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/items/:id/inactivate", "PUT"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/category", "GET|POST"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/category/:id", "PUT"),
-                new CasbinRule("p", "ADMINISTRATOR", "/api/v1/category/:id/inactivate", "PUT"),
                 new CasbinRule("p", "ADMINISTRATOR", "/api/v1/category/:id/inactivate", "PUT")
 
         ));

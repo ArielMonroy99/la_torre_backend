@@ -1,8 +1,9 @@
 package com.torre.backend.authorization.controllers;
 
-import com.torre.backend.authorization.annotations.CasbinFilter;
-import com.torre.backend.authorization.entities.CasbinRule;
+import com.torre.backend.authorization.dto.PolicyDto;
 import com.torre.backend.authorization.services.PolicyService;
+import com.torre.backend.common.dtos.QueryParamsDto;
+import com.torre.backend.common.dtos.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -11,9 +12,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.tags.Param;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -31,47 +29,41 @@ public class PolicyController {
         this.policyService = policyService;
     }
 
-    @CasbinFilter
+
     @GetMapping()
     @Operation(description = "Endpoint para listar todas las politicas")
     @SecurityRequirement(name = "bearerToken")
-    public ResponseEntity<List<CasbinRule>> getAllPolicies (){
-        return ResponseEntity.ok(policyService.getPolicies());
+    public ResponseEntity<?> getAllPolicies (@ModelAttribute QueryParamsDto queryParams) {
+        return ResponseEntity.ok(new ResponseDto<>(true, "Operation finished successfully",this.policyService.getPolicies(queryParams)));
     }
 
-    @CasbinFilter
+
     @PostMapping()
     @Operation(description = "Endpoint para guardar una nueva política",
                summary = "Guardar política")
     @SecurityRequirement(name = "bearerToken")
-    public ResponseEntity<CasbinRule> addPolicy (@RequestBody CasbinRule casbinRule){
-        policyService.addPolicy(casbinRule);
-        return ResponseEntity.ok(casbinRule);
+    public ResponseEntity<ResponseDto<?>> addPolicy (@RequestBody PolicyDto policyDto){
+        policyService.addPolicy(policyDto);
+        return ResponseEntity.ok(new ResponseDto<>(true,"Operation finished successfully",policyDto));
     }
 
-    @CasbinFilter
+
     @PutMapping()
     @Operation(description = "Endpoint para actualizar una politica", summary = "Actualizar politica")
     @SecurityRequirement(name = "bearerToken")
-    public ResponseEntity<CasbinRule> updatePolicy (@RequestBody CasbinRule casbinRule,
-                                                    @RequestParam() String subject,
-                                                    @RequestParam() String object,
-                                                    @RequestParam() String action){
-        CasbinRule oldRuleCasbin = new CasbinRule();
-        oldRuleCasbin.setV0(subject);
-        oldRuleCasbin.setV1(object);
-        oldRuleCasbin.setV2(action);
-        log.info("old rule {}", oldRuleCasbin);
-        policyService.updatePolicy(casbinRule,oldRuleCasbin);
-        return ResponseEntity.ok(casbinRule);
+    public ResponseEntity<ResponseDto<?>> updatePolicy (@RequestBody PolicyDto policyDto,
+                                                    @ModelAttribute PolicyDto oldPolicyDto){
+        log.info("old rule {}", policyDto);
+        policyService.updatePolicy(policyDto,oldPolicyDto);
+        return ResponseEntity.ok(new ResponseDto<>(true,"Operation finished successfully",policyDto));
     }
 
-    @CasbinFilter
+
     @DeleteMapping
     @Operation(description = "Endpoint para eliminar un política", summary = "Eliminar un política")
     @SecurityRequirement(name = "bearerToken")
-    public ResponseEntity<CasbinRule> deletePolicy (@RequestBody CasbinRule casbinRule){
-        policyService.deletePolicy(casbinRule);
-        return ResponseEntity.ok(casbinRule);
+    public ResponseEntity<?> deletePolicy (@RequestBody PolicyDto policyDto){
+        policyService.deletePolicy(policyDto);
+        return ResponseEntity.ok(new ResponseDto<>(true,"Operation finished successfully",policyDto));
     }
 }

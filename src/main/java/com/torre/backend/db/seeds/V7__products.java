@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.StringJoiner;
 
-public class V8__products extends BaseJavaMigration {
+public class V7__products extends BaseJavaMigration {
     @Override
     public void migrate(Context context) {
         ArrayList<CreateProductDto> products = new ArrayList<>(Arrays.asList(

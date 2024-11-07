@@ -74,4 +74,20 @@ public class DiscountController {
     return ResponseEntity.ok(new ResponseDto<>(true, Messages.SUCCESS, null));
   }
 
+  @Operation(summary = "Creates a new discount code for a discount")
+  @CasbinFilter
+  @PostMapping("/{id}/code")
+  public ResponseEntity<?> cretePromotionCode(@PathVariable Long id, HttpServletRequest request) {
+    String username = request.getAttribute("username").toString();
+    return ResponseEntity.ok(
+        new ResponseDto<>(true, Messages.SUCCESS, discountService.createCode(id, username)));
+  }
+
+  @Operation(summary = "Find a discount by its code")
+  @CasbinFilter
+  @GetMapping("/{code}")
+  public ResponseEntity<?> getDiscountByCode(@PathVariable String code) {
+    return ResponseEntity.ok(
+        new ResponseDto<>(true, Messages.SUCCESS, discountService.findDiscountByCode(code)));
+  }
 }

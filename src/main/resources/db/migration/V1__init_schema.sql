@@ -145,3 +145,5 @@ ALTER TABLE product
 
 ALTER TABLE user_torre
     ADD CONSTRAINT fk_user_torre_on_role FOREIGN KEY (role_id) REFERENCES role (id) ON DELETE NO ACTION;
+ALTER TABLE discount
+    ADD code VARCHAR(50);

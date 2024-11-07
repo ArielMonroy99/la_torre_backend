@@ -37,6 +37,7 @@ public class DiscountMapper {
     discountDto.setStartDate(discountEntity.getStartDate());
     discountDto.setEndDate(discountEntity.getEndDate());
     discountDto.setStatus(discountEntity.getStatus());
+    discountDto.setCode(discountEntity.getCode());
     discountDto.setProductDtoList(
         discountEntity.getProducts().stream().map(product -> productMapper.toDto(product))
             .toList());

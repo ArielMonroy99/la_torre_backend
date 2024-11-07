@@ -14,4 +14,6 @@ public interface DiscountRepository extends JpaRepository<Discount, Long> {
   @Query("SELECT d FROM Discount d JOIN d.products p WHERE p.id = :id and d.startDate < CURRENT_TIMESTAMP and d.endDate > CURRENT_TIMESTAMP and d.status = 'ACTIVE' order by d.createdAt")
   Discount findDiscountByProductId(Long id);
 
+  @Query("SELECT d FROM Discount d JOIN d.products p WHERE d.code = :code and d.startDate < CURRENT_TIMESTAMP and d.endDate > CURRENT_TIMESTAMP and d.status = 'ACTIVE' order by d.createdAt")
+  Discount findDiscountByCode(String code);
 }

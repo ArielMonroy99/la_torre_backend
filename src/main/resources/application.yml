@@ -1,41 +1,43 @@
 spring:
-   application:
-      name:
-         backend
-   datasource:
-      url:
-         jdbc:postgresql://localhost:5432/torre
-      driver-class-name:
-         org.postgresql.Driver
-      username:
-         postgres
-      password:
-         password
-   data:
-      jdbc:
-         dialect: postgresql
-   jpa:
-      hibernate:
-         ddl-auto: validate
-      show-sql: true
-   main:
-      allow-bean-definition-overriding: true
-   flyway:
-      locations: classpath:db/migration
-      enabled: false
-
+  config:
+    import:
+      optional:file:.env[.properties]
+  application:
+    name:
+      backend
+  datasource:
+    url:
+      jdbc:postgresql://${DATABASE_HOST}/${DATABASE}
+    driver-class-name:
+      org.postgresql.Driver
+    username:
+      ${DATABASE_USER}
+    password:
+      ${DATABASE_PASSWORD}
+  data:
+    jdbc:
+      dialect: postgresql
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  main:
+    allow-bean-definition-overriding: true
+  flyway:
+    locations: classpath:db/migration
+    enabled: false
 server:
-   port: 8080
-   error:
-      include-stacktrace: never
-   servlet:
-      context-path: /api/v1
+  port: 8080
+  error:
+    include-stacktrace: never
+  servlet:
+    context-path: /api/v1
 
 jwt:
-   expiration: 86400000
-   secret: OhdkbM+3UcgGuGkmOBUteulQ8M0C22jV1xO9dy4uHhV9evy2vYAtl6r8jVL8ymh50HgOWRFwACBqgitJ+yaw5z+4PE5frqzwoPqdHH4t+SBtL1425IBUjiFJvXg0nmDolM4+oZMFib2GFiH5DQ+gk8F0nP2UUos5kOR/pNNdCHkPhYAVPf+wBSTH4twK4s52Zqw64rYG6/aNSZ1wNXjku4PLV8HvehUVwsTa7ygATqBZR30LZG9P+gbGBol4d9L2yPCI7yPr+Zmoa5W5oULRKUFna1kdIHwyzpr6WKklv+i0y7W8zov1h3GZtHs+TvnJh+rNzq/iZQw8+QrmEw+J
+  expiration: ${JWT_EXPIRATION}
+  secret: ${JWT_SECRET}
 casbin:
-   store-type: jdbc
-   table-name: casbin_rule
-   initialize-schema: create
+  store-type: jdbc
+  table-name: casbin_rule
+  initialize-schema: create
 

@@ -13,6 +13,7 @@ public class Constants {
       "/api/v1/user/**",
       "/api/v1/products/**",
       "/api/v1/discounts",
-      "/api/v1/discounts/**"
+      "/api/v1/discounts/**",
+      "/api/v1/discounts/*/code"
   );
 }

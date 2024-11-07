@@ -31,6 +31,7 @@ public class DiscountDto {
   @JsonSerialize(using = LocalDateTimeSerializer.class)
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
   private LocalDateTime endDate;
+  private String code;
   private StatusEnum status;
   private List<ProductDto> productDtoList;
 }

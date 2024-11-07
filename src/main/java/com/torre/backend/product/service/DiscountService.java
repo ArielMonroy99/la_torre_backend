@@ -5,10 +5,12 @@ import com.torre.backend.common.dtos.QueryParamsDto;
 import com.torre.backend.common.exceptions.BaseException;
 import com.torre.backend.common.utils.PageableMapper;
 import com.torre.backend.product.dto.CreateDiscountDto;
+import com.torre.backend.product.dto.DiscountDto;
 import com.torre.backend.product.entities.Discount;
 import com.torre.backend.product.entities.Product;
 import com.torre.backend.product.mappers.DiscountMapper;
 import com.torre.backend.product.repository.DiscountRepository;
+import com.torre.backend.product.utils.CodeGenerator;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +25,13 @@ public class DiscountService {
 
   private final DiscountRepository discountRepository;
   private final ProductService productService;
+  private final CodeGenerator codeGenerator;
 
-  public DiscountService(DiscountRepository discountRepository, ProductService productService) {
+  public DiscountService(DiscountRepository discountRepository, ProductService productService,
+      CodeGenerator codeGenerator) {
     this.discountRepository = discountRepository;
     this.productService = productService;
+    this.codeGenerator = codeGenerator;
   }
 
   public void createDiscount(CreateDiscountDto createDiscountDto, String username) {
@@ -84,6 +89,26 @@ public class DiscountService {
 
   public Discount findDiscountByProductId(Long productId) {
     return discountRepository.findDiscountByProductId(productId);
+  }
+
+  public String createCode(Long discountId, String username) {
+    Discount discount = discountRepository.findById(discountId).orElse(null);
+    if (discount == null) {
+      throw new BaseException(HttpStatus.NOT_FOUND, "Discount not found");
+    }
+    String code = codeGenerator.generateCode();
+    discount.setCode(code);
+    discount.setUpdatedBy(username);
+    discountRepository.save(discount);
+    return code;
+  }
+
+  public DiscountDto findDiscountByCode(String code) {
+    Discount discount = discountRepository.findDiscountByCode(code);
+    if (discount == null) {
+      throw new BaseException(HttpStatus.NOT_FOUND, "Discount not found");
+    }
+    return DiscountMapper.toDto(discount);
   }
 }
 

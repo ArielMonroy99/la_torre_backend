@@ -30,40 +30,35 @@ public class V8__discounts extends BaseJavaMigration {
         "INSERT INTO discount (type, percentage, new_price, start_date, end_date, created_at, created_by, status) "
             +
             "VALUES (?, ?, ?, ?, ?, now(), 'migration', 'ACTIVE')";
-
-    try (Connection connection = context.getConnection()) {
-      PreparedStatement statement = connection.prepareStatement(sql);
-      for (CreateDiscountDto item : items) {
-        statement.setString(1, item.getType().name());
-        if (item.getPercentage() != null) {
-          statement.setInt(2, item.getPercentage());
-        } else {
-          statement.setNull(2, java.sql.Types.DECIMAL);
-        }
-        if (item.getNewPrice() != null) {
-          statement.setBigDecimal(3, item.getNewPrice());
-        } else {
-          statement.setNull(3, java.sql.Types.DECIMAL);
-        }
-        statement.setObject(4, item.getStartDate());
-        statement.setObject(5, item.getEndDate());
-        statement.execute();
+    Connection connection = context.getConnection();
+    PreparedStatement statement = connection.prepareStatement(sql);
+    for (CreateDiscountDto item : items) {
+      statement.setString(1, item.getType().name());
+      if (item.getPercentage() != null) {
+        statement.setInt(2, item.getPercentage());
+      } else {
+        statement.setNull(2, java.sql.Types.DECIMAL);
       }
-      statement.close();
-      statement = connection.prepareStatement("Insert into product_discount values (? , ?)");
-      int index = 1;
-      for (CreateDiscountDto item : items) {
-        for (Long productId : item.getProductIdList()) {
-          statement.setInt(1, index);
-          statement.setLong(2, productId);
-        }
-        statement.execute();
-        index++;
+      if (item.getNewPrice() != null) {
+        statement.setBigDecimal(3, item.getNewPrice());
+      } else {
+        statement.setNull(3, java.sql.Types.DECIMAL);
       }
-      statement.close();
-    } catch (SQLException e) {
-      e.printStackTrace();
+      statement.setObject(4, item.getStartDate());
+      statement.setObject(5, item.getEndDate());
+      statement.execute();
     }
-
+    statement.close();
+    statement = connection.prepareStatement("Insert into product_discount values (? , ?)");
+    int index = 1;
+    for (CreateDiscountDto item : items) {
+      for (Long productId : item.getProductIdList()) {
+        statement.setInt(1, index);
+        statement.setLong(2, productId);
+      }
+      statement.execute();
+      index++;
+    }
+    statement.close();
   }
 }

@@ -41,7 +41,9 @@ public class V2__casbin_rules extends BaseJavaMigration {
         new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts", "GET|POST|PUT"),
         new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:id", "PUT"),
         new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:id/activate", "PUT"),
-        new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:id/inactivate", "PUT")
+        new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:id/inactivate", "PUT"),
+        new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:id/code", "POST"),
+        new CasbinRule("p", "ADMINISTRATOR", "/api/v1/discounts/:code", "GET")
 
     ));
     StringJoiner valuesJoiner = new StringJoiner(",",

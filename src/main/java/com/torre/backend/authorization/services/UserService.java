@@ -12,7 +12,6 @@ import com.torre.backend.authorization.repositories.UserRepository;
 import com.torre.backend.common.dtos.QueryParamsDto;
 import com.torre.backend.common.exceptions.BaseException;
 import com.torre.backend.common.utils.PageableMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
 
 import java.security.SecureRandom;
 import java.util.Objects;
-import java.util.Optional;
 
 
 @Service
@@ -35,7 +33,6 @@ public class UserService {
     private static final SecureRandom random = new SecureRandom();
     private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
     public UserService(UserRepository userRepository, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;

@@ -33,6 +33,7 @@ public class CasbinFilterAspect {
         String method = request.getMethod();
         //TODO: create common messages class
         if (request.getAttribute("roles") == null) throw new BaseException(HttpStatus.UNAUTHORIZED, "Unauthorized");
+        @SuppressWarnings("unchecked")
         List<Role> roles = (List<Role>) request.getAttribute("roles");//TODO ver esto
         log.info("method: {}, uri: {}, username: {}", method, uri, roles);
         boolean hasPermission = roles.stream().anyMatch(role ->

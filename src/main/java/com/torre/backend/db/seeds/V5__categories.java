@@ -1,9 +1,6 @@
 package com.torre.backend.db.seeds;
 
-import com.torre.backend.authorization.entities.Role;
-import com.torre.backend.authorization.enums.RolEnum;
 import com.torre.backend.inventory.dto.CategoryDto;
-import com.torre.backend.inventory.entities.Category;
 import org.flywaydb.core.api.migration.BaseJavaMigration;
 import org.flywaydb.core.api.migration.Context;
 import org.springframework.jdbc.core.JdbcTemplate;

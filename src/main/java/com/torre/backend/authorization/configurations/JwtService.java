@@ -1,7 +1,22 @@
 package com.torre.backend.authorization.configurations;
 
-import io.jsonwebtoken.*;
+import com.torre.backend.authorization.repositories.RefreshTokenRepository;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtParser;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import javax.crypto.SecretKey;
+import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,19 +26,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import javax.xml.bind.DatatypeConverter;
-import java.util.*;
-import java.util.function.Function;
-
 @Component
 public class JwtService {
 
+  private final RefreshTokenRepository refreshTokenRepository;
   @Value("${jwt.secret}")
   private String JWT_SECRET;
   @Value("${jwt.expiration}")
   private int EXPIRATION_TIME;
   public static final Logger logger = LoggerFactory.getLogger(JwtService.class);
+
+  public JwtService(RefreshTokenRepository refreshTokenRepository) {
+    this.refreshTokenRepository = refreshTokenRepository;
+  }
 
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
@@ -37,8 +52,9 @@ public class JwtService {
   }
 
   private String doGenerateToken(Map<String, Object> claims, String subject) {
-    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);// this has to be base-64 encoded, it
-                                                                               // reads 'secret' if we de-encoded it
+    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
+        JWT_SECRET);// this has to be base-64 encoded, it
+    // reads 'secret' if we de-encoded it
     SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
     return Jwts.builder().subject(subject)
         .claims(claims)
@@ -48,7 +64,7 @@ public class JwtService {
         .compact();
   }
 
-  private String generateRefreshToken(UserDetails userDetails, Long id) {
+  public String generateRefreshToken(UserDetails userDetails, Long id) {
     SecretKey key = Keys.hmacShaKeyFor(DatatypeConverter.parseBase64Binary(JWT_SECRET));
     return Jwts.builder()
         .issuer(userDetails.getUsername())
@@ -56,9 +72,17 @@ public class JwtService {
         .issuedAt(new Date(System.currentTimeMillis()))
         .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
         .signWith(key)
-
         .signWith(key)
         .compact();
+  }
+
+  public String extractIssuer(String token) {
+    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
+        JWT_SECRET);// this has to be base-64 encoded, it
+    // reads 'secret' if we de-encoded it
+    SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
+    JwtParser parser = Jwts.parser().verifyWith(key).build();
+    return parser.parseSignedClaims(token).getPayload().getIssuer();
   }
 
   public String extractUsername(String token) {
@@ -71,8 +95,9 @@ public class JwtService {
   }
 
   private Claims extractAllClaims(String token) {
-    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);// this has to be base-64 encoded, it
-                                                                               // reads 'secret' if we de-encoded it
+    byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
+        JWT_SECRET);// this has to be base-64 encoded, it
+    // reads 'secret' if we de-encoded it
     SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
     JwtParser parser = Jwts.parser().verifyWith(key).build();
     return parser.parseSignedClaims(token).getPayload();
@@ -88,13 +113,18 @@ public class JwtService {
 
   public Boolean validateToken(String token) {
     try {
-      byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(JWT_SECRET);// this has to be base-64 encoded, it
-                                                                                 // reads 'secret' if we de-encoded it
+      byte[] apiKeySecretBytes = DatatypeConverter.parseBase64Binary(
+          JWT_SECRET);// this has to be base-64 encoded, it
+      // reads 'secret' if we de-encoded it
       SecretKey key = Keys.hmacShaKeyFor(apiKeySecretBytes);
       JwtParser parser = Jwts.parser().verifyWith(key).build();
       parser.parseSignedClaims(token).getPayload();
+      if (isTokenExpired(token)) {
+        throw new BadCredentialsException("Expired or invalid token");
+      }
       return true;
-    } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+    } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+             IllegalArgumentException ex) {
       throw new BadCredentialsException("INVALID_CREDENTIALS");
     }
   }

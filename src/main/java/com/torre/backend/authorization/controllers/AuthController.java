@@ -1,6 +1,7 @@
 package com.torre.backend.authorization.controllers;
 
 import com.torre.backend.authorization.dto.AuthenticationRequestDto;
+import com.torre.backend.authorization.dto.RefreshTokenDto;
 import com.torre.backend.authorization.services.AuthService;
 import com.torre.backend.common.dtos.ResponseDto;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,15 +16,25 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Authorization")
 public class AuthController {
 
-    private final AuthService authService;
+  private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
+  public AuthController(AuthService authService) {
+    this.authService = authService;
+  }
 
-    @Operation(summary = "Authorize users using username and password")
-    @PostMapping("/auth")
-    public ResponseEntity<ResponseDto<?>> auth(@RequestBody AuthenticationRequestDto authenticationRequestDto) {
-        return ResponseEntity.ok(new ResponseDto<>(true, "Authenticated successfully",authService.authenticate(authenticationRequestDto)));
-    }
+  @Operation(summary = "Authorize users using username and password")
+  @PostMapping("/auth")
+  public ResponseEntity<ResponseDto<?>> auth(
+      @RequestBody AuthenticationRequestDto authenticationRequestDto) {
+    return ResponseEntity.ok(new ResponseDto<>(true, "Authenticated successfully",
+        authService.authenticate(authenticationRequestDto)));
+  }
+
+  @Operation(summary = "Returns new access token")
+  @PostMapping("/auth/refresh-token")
+  public ResponseEntity<ResponseDto<?>> refreshToken(@RequestBody RefreshTokenDto refreshToken) {
+    return ResponseEntity.ok(
+        new ResponseDto<>(true, "Token Refreshed",
+            authService.refreshToken(refreshToken.getToken())));
+  }
 }

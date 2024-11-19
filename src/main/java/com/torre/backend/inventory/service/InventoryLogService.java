@@ -1,7 +1,6 @@
 package com.torre.backend.inventory.service;
 
 import com.torre.backend.authorization.entities.User;
-import com.torre.backend.authorization.repositories.UserRepository;
 import com.torre.backend.authorization.services.UserService;
 import com.torre.backend.common.dtos.QueryParamsDto;
 import com.torre.backend.common.exceptions.BaseException;
@@ -12,12 +11,9 @@ import com.torre.backend.inventory.entities.InventoryLogs;
 import com.torre.backend.inventory.entities.Item;
 import com.torre.backend.inventory.mappers.InventoryLogMapper;
 import com.torre.backend.inventory.repository.InventoryLogsRepository;
-import org.apache.coyote.BadRequestException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-
 import java.time.LocalDateTime;
 
 public class InventoryLogService {
